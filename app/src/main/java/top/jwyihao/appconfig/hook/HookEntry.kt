@@ -91,15 +91,15 @@ class HookEntry : IYukiHookXposedInit {
     }
 
     loadApp {
-      var mainActivityName: String = ""
+      var mainActivityName: String = queryIntentActivities(getLaunchIntentForPackage(packageName)!!, 0).first().activityInfo.name
       loggerD(msg = "搜寻入口activity中"+packageName)
       val pm: PackageManager? = systemContext?.getPackageManager()
       val intent: Intent = Intent(Intent.ACTION_MAIN, null);
       intent.setPackage(packageName);
       val infos: List<ResolveInfo>? = pm?.queryIntentActivities(intent, PackageManager.MATCH_ALL)
       infos?.forEach {
-        loggerD(msg = "[activtiyName]"+it.activityInfo.name);
-        mainActivityName = it.activityInfo.name
+        loggerD(msg = "[activtiyName]"+mainActivityName);
+        //mainActivityName = it.activityInfo.name
       }
 
       findClass(mainActivityName).hook {
